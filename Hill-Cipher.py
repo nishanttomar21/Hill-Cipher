@@ -5,7 +5,10 @@
 ###########################################
 
 
-# Key
+# Importing regex library
+import re
+
+# Key (3x3 matrix therefore, plaintext matrix possible matrices - 3x1, 3x2, 3x3)
 key_matrix = [[6, 5, 1], [3, 2, 3], [4, 3, 2]]
 rows = columns = 3                                                                                                                  # Column and row size of matrix
 
@@ -26,13 +29,51 @@ def int_to_char(integer):
     return character
 
 
+# Checks if the input message contains any number
+def has_numbers(input):
+    return any(character.isdigit() for character in input)
+
+
+# Checks the length of input string (3, 6, 9) - lengths only possible (because of dimension of key_matrix)
+def check_length(input):
+    return True if len(input) in (3, 6, 9) else False
+
+
+# Check if any illegal characters present in the string
+def check_illegal_char(input):
+    regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')                                                                                 # Regex
+
+    return True if regex.search(input) == None else False
+
+
+# Checking of input string
+def check_input(input):
+    # Checking all valid conditions if true
+    if not has_numbers(input) and check_length(input) and check_illegal_char(input):
+        return True
+
+    return False
+
+
 # To take plain-text input from the user (Message to be encrypted)
 def take_input():
     print("\n\n####################################")
     print("\t\t\tHILL CIPHER")
     print("####################################\n\n")
-    print("Enter your message to be encrypted in capital-letters (Input 3x3 matrix, row-wise and one-by-one)")
+    input_string = ""
 
+    # Loop till the input is not valid
+    while True:
+        input_string = input("Enter your message to be encrypted in capital-letters (Input length of message should be 3, 6 or 9): ")
+        flag = check_input(input_string)
+
+        if flag:
+            break
+        else:
+            print("\nPlease try again (Invalid input)!")
+
+
+'''
     # Taking matrix input in one line
     character_input_matrix = [[input("Input[" + str(y+1) + "][" + str(x+1) + "]: ").upper() for x in range(columns)] for y in range(rows)]
 
@@ -45,7 +86,7 @@ def take_input():
     integer_input_matrix = [[char_to_int(character_input_matrix[y][x]) for x in range(columns)] for y in range(rows)]
 
     return integer_input_matrix
-
+'''
 
 # Function to perform matrix multiplication between 2 matrices
 def matrix_multiplication(matrix1, matrix2):
@@ -79,5 +120,6 @@ def encryption(matrix):
 
 # So that this function doesn't run when some other file imports this file
 if __name__ == "__main__":
-    message_matrix = take_input()
-    encrypted_matrix = encryption(message_matrix)
+    take_input()
+    #message_matrix = take_input()
+    #encrypted_matrix = encryption(message_matrix)
